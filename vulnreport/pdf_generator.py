@@ -5,11 +5,6 @@ import os
 def markdown_to_pdf(markdown_text, output_path="report.pdf", css_path=None):
     """
     Converts Markdown text to a styled PDF file.
-
-    Args:
-        markdown_text (str): The raw markdown content.
-        output_path (str): Path to save the generated PDF.
-        css_path (str, optional): Path to a custom CSS file for styling the output.
     """
     try:
         # Convert markdown to HTML
