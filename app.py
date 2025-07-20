@@ -4,14 +4,15 @@ import os
 from vulnreport.markdown_generator import generate_markdown
 from vulnreport.pdf_generator import markdown_to_pdf
 
+# App setup
 st.set_page_config(page_title="VulnReport Formatter", layout="wide")
-
 st.title("🛡️ VulnReport Formatter")
-st.markdown("Turn raw bug bounty findings into clean PDF reports.")
+st.markdown("Generate professional vulnerability reports from structured data.")
 
-st.subheader("Step 1: Enter Vulnerability Data")
+# Input section
+st.subheader("Step 1: Paste Vulnerability JSON")
 
-default_json = {
+sample_data = {
     "title": "SQL Injection in login",
     "severity": "High",
     "target": "https://example.com/login",
@@ -26,37 +27,57 @@ default_json = {
     "screenshots": []
 }
 
-input_text = st.text_area("Paste your JSON here:", json.dumps(default_json, indent=2), height=300)
+json_input = st.text_area(
+    label="Paste your JSON data:",
+    value=json.dumps(sample_data, indent=2),
+    height=300
+)
 
+# Optional file upload
 st.subheader("Step 2: Upload Screenshots (Optional)")
-uploaded_files = st.file_uploader("Upload PoC screenshots", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
+uploaded_images = st.file_uploader(
+    "Attach screenshots (PNG, JPG, JPEG)",
+    type=["png", "jpg", "jpeg"],
+    accept_multiple_files=True
+)
 
-# Save screenshots to a temp folder
-screenshot_paths = []
-if uploaded_files:
+# Save uploaded images temporarily
+screenshot_files = []
+if uploaded_images:
     os.makedirs("uploads", exist_ok=True)
-    for file in uploaded_files:
-        file_path = os.path.join("uploads", file.name)
-        with open(file_path, "wb") as f:
-            f.write(file.read())
-        screenshot_paths.append(file_path)
+    for image in uploaded_images:
+        path = os.path.join("uploads", image.name)
+        with open(path, "wb") as f:
+            f.write(image.read())
+        screenshot_files.append(path)
 
-if st.button("📝 Generate Report"):
+# Report generation button
+if st.button("📝 Generate PDF Report"):
     try:
-        data = json.loads(input_text)
-        data["screenshots"] = screenshot_paths
+        report_data = json.loads(json_input)
+        report_data["screenshots"] = screenshot_files
 
-        markdown = generate_markdown(data)
+        # Generate markdown from structured data
+        markdown_content = generate_markdown(report_data)
 
-        with open("report.md", "w") as f:
-            f.write(markdown)
+        with open("report.md", "w") as md_file:
+            md_file.write(markdown_content)
 
-        markdown_to_pdf(markdown, "report.pdf")
+        # Convert markdown to PDF
+        markdown_to_pdf(markdown_content, output_path="report.pdf")
 
-        st.success("✅ Report generated!")
+        st.success("✅ Report generated successfully!")
 
-        with open("report.pdf", "rb") as f:
-            st.download_button("📥 Download PDF Report", f, file_name="vuln_report.pdf", mime="application/pdf")
+        with open("report.pdf", "rb") as pdf_file:
+            st.download_button(
+                label="📥 Download Report",
+                data=pdf_file,
+                file_name="vuln_report.pdf",
+                mime="application/pdf"
+            )
 
+    except json.JSONDecodeError:
+        st.error("❌ Invalid JSON format. Please check your input.")
     except Exception as e:
-        st.error(f"❌ Error generating report: {e}")
+        st.error(f"❌ Failed to generate report: {e}")
+
