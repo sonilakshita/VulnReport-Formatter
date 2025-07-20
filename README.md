@@ -24,3 +24,5 @@ pip install -r requirements.txt
 3. Install wkhtmltopdf (required for PDF generation):
 Download wkhtmltopdf
 Install it and ensure it’s added to your system 
+
+Author: @sonilakshita
