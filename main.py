@@ -13,7 +13,7 @@ def main():
         return
 
     try:
-        # Load vulnerability data from JSON
+    
         with open(input_path, "r") as file:
             vulnerability_data = json.load(file)
         markdown_content = generate_markdown(vulnerability_data)
