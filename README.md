@@ -14,6 +14,7 @@ it is simple to use and command-line based.
 
 1. Make a clone of the repository:
 git clone https://github.com/sonilakshita/VulnReport-Formatter.git
+
 cd VulnReport-Formatter
 
 
@@ -23,6 +24,14 @@ pip install -r requirements.txt
 
 3. Install wkhtmltopdf (required for PDF generation):
 Download wkhtmltopdf
-Install it and ensure it’s added to your system 
+Install it and ensure it’s added to your system
+
+**enter command **
+
+python -m pip install -r requirements.txt
+
+streamlit run app.py 
+
+the page will be run on your default browser...
 
 Author: @sonilakshita
