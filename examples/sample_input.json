@@ -1,0 +1,17 @@
+{
+  "title": "SQL Injection in login endpoint",
+  "severity": "High",
+  "target": "https://example.com/login",
+  "description": "An SQLi was found in the login POST request...",
+  "steps_to_reproduce": [
+    "Open BurpSuite.",
+    "Intercept the login request.",
+    "Modify the username field to: `' OR 1=1--`",
+    "Send the request."
+  ],
+  "impact": "Bypass authentication and access admin panel.",
+  "recommendation": "Use parameterized queries.",
+  "screenshots": [
+    "assets/sample_screenshot.png"
+  ]
+}
