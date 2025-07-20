@@ -1,17 +1,29 @@
 from jinja2 import Template
 import os
 
-def generate_markdown(data):
-    with open("vulnreport/templates/report_template.md", "r") as f:
-        template = Template(f.read())
+def generate_markdown(data, template_path="vulnreport/templates/report_template.md"):
+    """
+    Renders a markdown vulnerability report from a Jinja2 template.
 
-    markdown = template.render(**data)
-    return markdown
+    Args:
+        data (dict): Dictionary containing vulnerability details.
+        template_path (str): Path to the markdown Jinja2 template file.
 
-from jinja2 import Template
+    Returns:
+        str: Rendered markdown string.
+    """
+    if not os.path.exists(template_path):
+        raise FileNotFoundError(f"Template file not found: {template_path}")
 
-def generate_markdown(data):
-    with open("vulnreport/templates/report_template.md", "r") as f:
-        template = Template(f.read())
+    try:
+        with open(template_path, "r", encoding="utf-8") as template_file:
+            template_content = template_file.read()
+            template = Template(template_content)
 
-    return template.render(**data)
+        markdown_output = template.render(**data)
+        return markdown_output
+
+    except Exception as e:
+        print(f"[!] Failed to render markdown: {e}")
+        raise
+
